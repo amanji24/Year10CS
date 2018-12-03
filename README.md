@@ -1,4 +1,4 @@
 # Year10CS
 Year 10 CompSci //
 
-This is a test
+My final Java Game is in the 'NewGame' directory.
