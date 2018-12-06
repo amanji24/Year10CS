@@ -188,11 +188,39 @@ import java.awt.font.*;
 			l4qanswer = l4q1 * l4q2;
 		} }
 		
+		boolean l2correct = false;
+		boolean l2incorrect = false;
+		boolean l2q = false;
+		Random randl2 = new Random();
+		String l2opstr = "";
+		int l2q1 = randl4q.nextInt(10) + 1;
+		int l2q2 = randl4q.nextInt(10) + 1;
+		int l2fakeanschg1 = rand44.nextInt(40)-20;
+		int l2fakeanschg2 = rand44.nextInt(40)-20;
+		int l2ansside = randl4q.nextInt(3);
+		int l2answer = 0;
+		int l2op = randl4q.nextInt(3); {
+		if (l2op == 0) {
+				l2opstr = "+";
+			} else if (l2op == 1) {
+				l2opstr = "-";
+			} else if (l2op == 2) {
+				l2opstr = "x";
+		}
+		if (l2op == 0) {
+			l2answer = l2q1 + l2q2;
+		} else if (l2op == 1) {
+			l2answer = l2q1 - l2q2;
+		} else if (l2op == 2) {
+			l2answer = l2q1 * l2q2;
+		} }
+		
 		Random randfq = new Random();
 		String fqopstr = "";
 		int fq1 = randl4q.nextInt(10) + 1;
 		int fq2 = randl4q.nextInt(10) + 1;
-		int fqfakeanschg = rand44.nextInt(40)-20;
+		int fqfakeanschg1 = rand44.nextInt(40)-20;
+		int fqfakeanschg2 = rand44.nextInt(40)-20;
 		int fqansside = randl4q.nextInt(3);
 		int fqanswer = 0;
 		int fqop = randl4q.nextInt(3); {
@@ -294,6 +322,8 @@ import java.awt.font.*;
 		boolean regWin = false;
 		int score = 0;
 		boolean presentation = false;
+		long ptimer = 0;
+		int bs3t = 1;
 		
 		Random rand2 = new Random();
 		String[] poweruplist = new String[10]; {
@@ -532,7 +562,6 @@ import java.awt.font.*;
 				
 				System.out.println(Integer.toString(puqnum));
 				g.drawImage(menuimg, 0, 0, 1200, 800, this);
-				g.drawString("After you click any button, you must press the command button...", 33, 33);
 				
 			} else if (instructions == true) {
 				
@@ -662,7 +691,7 @@ import java.awt.font.*;
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						g.drawString("You must avoid touching enemies.", 100, 500);
+						g.drawString("Try not to touch enemies.", 100, 500);
 						try {
 							Thread.sleep(1250);
 						} catch (InterruptedException e) {
@@ -685,7 +714,7 @@ import java.awt.font.*;
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						g.drawString("You must avoid touching enemies.", 500, 250);
+						g.drawString("Try not to touch enemies.", 500, 250);
 						try {
 							Thread.sleep(1250);
 						} catch (InterruptedException e) {
@@ -709,7 +738,7 @@ import java.awt.font.*;
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						g.drawString("You must avoid touching enemies.", 100, 500);
+						g.drawString("Try not to touch enemies.", 100, 500);
 						try {
 							Thread.sleep(1250);
 						} catch (InterruptedException e) {
@@ -733,7 +762,7 @@ import java.awt.font.*;
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						g.drawString("You must avoid touching enemies.", 100, 500);
+						g.drawString("Try not to touch enemies.", 100, 500);
 						try {
 							Thread.sleep(1250);
 						} catch (InterruptedException e) {
@@ -757,7 +786,7 @@ import java.awt.font.*;
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						g.drawString("You must avoid touching enemies.", 100, 500);
+						g.drawString("Try not to touch enemies.", 100, 500);
 						try {
 							Thread.sleep(1250);
 						} catch (InterruptedException e) {
@@ -784,7 +813,7 @@ import java.awt.font.*;
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							g.drawString("You must avoid touching enemies.", 100, 500);
+							g.drawString("Try not to touch enemies.", 100, 500);
 							try {
 								Thread.sleep(1250);
 							} catch (InterruptedException e) {
@@ -815,7 +844,53 @@ import java.awt.font.*;
 						movecount = 0;
 					}
 					
-					g.drawImage(helper, 500, 686, 75, 75, this);
+					if (l2q) {
+						
+						g.drawString(Integer.toString(l2q1) + " " + l2opstr + " " + Integer.toString(l2q2) + " = ?", 350, 650);
+						if (l2ansside == 0) {
+							g.drawString("1. " + Integer.toString(l2answer), 350, 675);
+							g.drawString("2. " + Integer.toString(l2answer + l2fakeanschg1), 400, 675);
+							g.drawString("3. " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
+						} else if (l2ansside == 1) {
+							g.drawString("1. " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
+							g.drawString("2. " + Integer.toString(l2answer), 400, 675);
+							g.drawString("3. " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
+						} else {
+							g.drawString("1. " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
+							g.drawString("2. " + Integer.toString(l2answer + l2fakeanschg2), 400, 675);
+							g.drawString("3. " + Integer.toString(l2answer), 450, 675);
+						}
+						
+					}
+					
+					if (l2correct) {
+					
+						g.drawString("Correct! Good job!", 350, 675);
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						l2correct = false;
+						
+					}
+					
+					if (l2incorrect) {
+						
+						g.drawString("That's incorrect. Try again!", 350, 675);
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						l2incorrect = false;
+						l2q = true;
+						
+					}
+					
+					g.drawImage(helper, 500, 707, 75, 75, this);
 					
 					if (hero1.getxCoord() > 100 && help) {
 						try {
@@ -873,13 +948,23 @@ import java.awt.font.*;
 						}	
 						g.drawString("These big, moving enemies deal 15-20 damage each time you touch them. They move more slowly and in smaller distances.", 150, b21.getyCoord()+25);
 						g.drawImage(b21.getImg(), b21.getxCoord(), b21.getyCoord(), b21.getWidth(), b21.getHeight(), this);
+						l2q = true;
 						try {
 							Thread.sleep(12000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						g.drawString("First, I need to know if you can defeat the evil... Solve this puzzle!", 350, 695);
+						try {
+							Thread.sleep(4000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						help = false;
+						
+						
 					}
 					
 					g.drawLine(s21.getxCoord()+25, -50, s21.getxCoord()+25, s21.getyCoord()+10);
@@ -1421,6 +1506,7 @@ import java.awt.font.*;
 						wave3 = true;
 						deviceunlocked = true;
 						deviceshow = true;
+						bs3t = 4;
 						
 					}
 					
@@ -1530,7 +1616,7 @@ import java.awt.font.*;
 						
 						g.drawString("What?!", 175, 50);
 						try {
-							Thread.sleep(2500);
+							Thread.sleep(2500/bs3t);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -1539,28 +1625,28 @@ import java.awt.font.*;
 						deviceshow = true;
 						g.drawImage(device.getImg(), device.getxCoord(), device.getyCoord(), device.getWidth(), device.getHeight(), this);
 						try {
-							Thread.sleep(2500);
+							Thread.sleep(2500/bs3t);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						g.drawString("You have defeated me.", 750, 50);
 						try {
-							Thread.sleep(2500);
+							Thread.sleep(2500/bs3t);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						g.drawString("Noooooooooo!", 750, 75);
 						try {
-							Thread.sleep(4500);
+							Thread.sleep(4500/bs3t);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						g.drawString("Suddenly, you are teleported...", 500, 400);
 						try {
-							Thread.sleep(4000);
+							Thread.sleep(4000/bs3t);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -1833,15 +1919,15 @@ import java.awt.font.*;
 						g.drawString(Integer.toString(fq1) + " " + fqopstr + " " + Integer.toString(fq2) + " = ?", 500, 550);
 						if (fqansside == 0) {
 							g.drawString("1. " + Integer.toString(fqanswer), 475, 570);
-							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg), 530, 570);
-							g.drawString("3. " + Integer.toString(fqanswer - fqfakeanschg), 585, 570);
+							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg1), 530, 570);
+							g.drawString("3. " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
 						} else if (fqansside == 1) {
-							g.drawString("1. " + Integer.toString(fqanswer + fqfakeanschg), 475, 570);
+							g.drawString("1. " + Integer.toString(fqanswer + fqfakeanschg1), 475, 570);
 							g.drawString("2. " + Integer.toString(fqanswer), 530, 570);
-							g.drawString("3. " + Integer.toString(fqanswer - fqfakeanschg), 585, 570);
+							g.drawString("3. " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
 						} else {
-							g.drawString("1. " + Integer.toString(fqanswer  - fqfakeanschg), 475, 570);
-							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg), 530, 570);
+							g.drawString("1. " + Integer.toString(fqanswer  + fqfakeanschg1), 475, 570);
+							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg2), 530, 570);
 							g.drawString("3. " + Integer.toString(fqanswer), 585, 570);
 						}
 						g.drawString("Answer quickly, time affects your score.", 500, 600);
@@ -2107,6 +2193,54 @@ import java.awt.font.*;
 				
 			}
 			
+			if (l2q) {
+				
+				if (e.getKeyCode() == 49) {
+					
+					if (l2ansside == 0) {
+						
+						l2correct = true;
+						l2q = false;
+					
+					} else {
+						
+						l2incorrect = true;
+						l2q = false;
+						
+					}
+				
+				} else if (e.getKeyCode() == 50) {
+					
+					if (l2ansside == 1) {
+						
+						l2correct = true;
+						l2q = false;
+					
+					} else {
+						
+						l2incorrect = true;
+						l2q = false;
+						
+					}
+				
+				} else if (e.getKeyCode() == 51) {
+					
+					if (l2ansside == 2) {
+						
+						l2correct = true;
+						l2q = false;
+					
+					} else {
+						
+						l2incorrect = true;
+						l2q = false;
+						
+					}
+				
+				}
+				
+			} else {
+			
 			if (musicselect) {
 				
 				if (e.getKeyCode() == 49) {
@@ -2328,6 +2462,7 @@ import java.awt.font.*;
 							powers = true;
 							powercount = powercount - 1;
 							System.out.println("powers");	
+							ptimer = System.currentTimeMillis();
 						}
 					} else {
 						powers = false;
@@ -2390,7 +2525,9 @@ import java.awt.font.*;
 				
 				if (puq == true) {
 					
-					if (puqnum == 1) {
+					int puqcheck = e.getKeyCode();
+					
+					if (puqnum == 1 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 49) {
 							
@@ -2410,7 +2547,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 2) {
+					} else if (puqnum == 2 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 50) {
 							
@@ -2430,7 +2567,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 3) {
+					} else if (puqnum == 3 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 51) {
 							
@@ -2450,7 +2587,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 4) {
+					} else if (puqnum == 4 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 49) {
 							
@@ -2470,7 +2607,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 5) {
+					} else if (puqnum == 5 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 50) {
 							
@@ -2490,7 +2627,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 6) {
+					} else if (puqnum == 6 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 50) {
 							
@@ -2510,7 +2647,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 7) {
+					} else if (puqnum == 7 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 50) {
 							
@@ -2530,7 +2667,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 8) {
+					} else if (puqnum == 8 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 49) {
 							
@@ -2550,7 +2687,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 9) {
+					} else if (puqnum == 9 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 51) {
 							
@@ -2570,7 +2707,7 @@ import java.awt.font.*;
 							
 						}
 						
-					} else if (puqnum == 10) {
+					} else if (puqnum == 10 && ((puqcheck > 48 && puqcheck < 52) || (puqcheck > 54 && puqcheck < 58))) {
 						
 						if (e.getKeyCode() == 51) {
 							
@@ -2620,12 +2757,32 @@ import java.awt.font.*;
 						if (e.getKeyCode() == 37) {
 							
 							hero1.moveIt(e.getKeyCode());
+							if (System.currentTimeMillis() - ptimer < 2500 && powers) {
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								hero1.setImg("files/attackleft.png");
+							} else {
 							hero1.setImg("files/left.png");
+							}
 							
 						} else if (e.getKeyCode() == 39) {
 							
 							hero1.moveIt(e.getKeyCode());
+							if (System.currentTimeMillis() - ptimer < 2500 && powers) {
+								try {
+									Thread.sleep(10);
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								hero1.setImg("files/attack.png");
+							} else {
 							hero1.setImg("files/right.png");
+							}
 							
 						}	
 							
@@ -2660,7 +2817,7 @@ import java.awt.font.*;
 					
 				}
 			
-			}
+			} }
 			
 			///////
 			
