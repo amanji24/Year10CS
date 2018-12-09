@@ -1,5 +1,3 @@
-// FINISH ONE PLAYER, FINISH RANDOM Q'S [2 player] [Sunday] && DO PRESENTATION [Monday]
-
 package game;
 
 	import java.awt.Canvas;
@@ -162,7 +160,16 @@ import java.awt.font.*;
 		Image optionsimg = Toolkit.getDefaultToolkit().createImage("files/options.png");
 		Image musicimg = Toolkit.getDefaultToolkit().createImage("files/musicsel.png");
 		Image bgselectimg = Toolkit.getDefaultToolkit().createImage("files/bgsel.png");
-		
+		Image pauseimg = Toolkit.getDefaultToolkit().createImage("files/pause.png");
+		Image shopimg = Toolkit.getDefaultToolkit().createImage("files/shop.png");
+		Image powerup1 = Toolkit.getDefaultToolkit().createImage("files/powerup1.png");
+		Image powerup2 = Toolkit.getDefaultToolkit().createImage("files/powerup2.png");
+		Image powerup3 = Toolkit.getDefaultToolkit().createImage("files/powerup3.png");
+		Image powerup4 = Toolkit.getDefaultToolkit().createImage("files/powerup4.png");
+		Image powerup5 = Toolkit.getDefaultToolkit().createImage("files/powerup5.png");
+		Image successimg = Toolkit.getDefaultToolkit().createImage("files/success.png");
+		Image purchasedimg = Toolkit.getDefaultToolkit().createImage("files/purchased.png");
+		Image needcoinsimg = Toolkit.getDefaultToolkit().createImage("files/needcoins.png");
 		
 		Random randl4q = new Random();
 		String l4qopstr = "";
@@ -324,6 +331,24 @@ import java.awt.font.*;
 		boolean presentation = false;
 		long ptimer = 0;
 		int bs3t = 1;
+		boolean pause = false;
+		boolean shop = false;
+		boolean pu1on = false;
+		boolean pu2on = false;
+		boolean pu3on = false;
+		boolean pu4on = false;
+		boolean pu5on = false;
+		boolean skin1 = false;
+		boolean skin2 = false;
+		boolean bossskin = false;
+		long l1timer = 0;
+		long l3timer = 0;
+		long l4timer = 0;
+		long l5timer = 0;
+		long coins = 0;
+		boolean success = false;
+		boolean needcoins = false;
+		boolean purchased = false;
 		
 		Random rand2 = new Random();
 		String[] poweruplist = new String[10]; {
@@ -454,6 +479,7 @@ import java.awt.font.*;
 				hero1.setxCoord(10);
 				hero1.setyCoord(586);
 				ktimer = System.currentTimeMillis()/1000;
+				l1timer = System.currentTimeMillis()/1000;
 				/*hero1.setxCoord(0);
 				hero1.setyCoord(-14);
 				movecount = 4;
@@ -537,8 +563,12 @@ import java.awt.font.*;
 			} else if (instructions == true) {
 				
 				if (e.getButton() == 1) {
-					instructions = false;
-					options = true;
+					if (pause) {
+						instructions = false;
+					} else if (!pause) {
+						instructions = false;
+						options = true;
+					}
 				}
 				
 			} else if (musicselect) {
@@ -558,14 +588,58 @@ import java.awt.font.*;
 		@Override
 		public void paint(Graphics g) {
 
+			if (success) {
+				
+				g.drawImage(successimg, 0, 0, 1200, 777, this);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				success = false;
+				
+			} else if (purchased) {
+				
+				g.drawImage(purchasedimg, 0, 0, 1200, 777, this);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				purchased = false;
+				
+			} else if (needcoins) {
+				
+				g.drawImage(needcoinsimg, 0, 0, 1200, 777, this);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				needcoins = false;
+				
+			} else {
+			
 			if (menu == true) {
 				
-				System.out.println(Integer.toString(puqnum));
+				//System.out.println(Integer.toString(puqnum));
 				g.drawImage(menuimg, 0, 0, 1200, 800, this);
 				
-			} else if (instructions == true) {
+			} else if (instructions) {
 				
 				g.drawImage(instructionsimg, 0, 0, 1200, 777, this);
+				
+			} else if (shop) {
+			
+				g.drawImage(shopimg, 0, 0, 1200, 800, this);
+				g.drawString(Long.toString(coins), 663, 172);
+			
+			} else if (pause) {
+			
+				g.drawImage(pauseimg, 0, 0, 1200, 800, this);
 				
 			} else if (options) {
 			
@@ -633,6 +707,7 @@ import java.awt.font.*;
 					g.drawString("Teleport Charges: " + Integer.toString(Math.abs(TelesUsed - TeleLimit)), 15, 65);
 				}
 				g.drawString(Integer.toString(hero1.getxCoord()) + "," + Integer.toString(hero1.getyCoord()), 1100, 25);
+				g.drawString("Coins: " + Long.toString(coins), 1100, 45);
 				
 				if (moving == true) {
 					if ((hero1.getyCoord() < 100 && level == 1) || (hero1.getyCoord() < 100 && level == 6)) {
@@ -833,6 +908,11 @@ import java.awt.font.*;
 					TeleLimit = 2;
 					godmode = false;
 					level = 2;
+					if (System.currentTimeMillis()/1000 - l1timer < 17) {
+						coins = coins + 17 - (System.currentTimeMillis()/1000 - l1timer);
+						System.out.println("coins: " + coins);
+					}
+					
 					
 				}
 					
@@ -848,17 +928,17 @@ import java.awt.font.*;
 						
 						g.drawString(Integer.toString(l2q1) + " " + l2opstr + " " + Integer.toString(l2q2) + " = ?", 350, 650);
 						if (l2ansside == 0) {
-							g.drawString("1. " + Integer.toString(l2answer), 350, 675);
-							g.drawString("2. " + Integer.toString(l2answer + l2fakeanschg1), 400, 675);
-							g.drawString("3. " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
+							g.drawString("1) " + Integer.toString(l2answer), 350, 675);
+							g.drawString("2) " + Integer.toString(l2answer + l2fakeanschg1), 400, 675);
+							g.drawString("3) " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
 						} else if (l2ansside == 1) {
-							g.drawString("1. " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
-							g.drawString("2. " + Integer.toString(l2answer), 400, 675);
-							g.drawString("3. " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
+							g.drawString("1) " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
+							g.drawString("2) " + Integer.toString(l2answer), 400, 675);
+							g.drawString("3) " + Integer.toString(l2answer + l2fakeanschg2), 450, 675);
 						} else {
-							g.drawString("1. " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
-							g.drawString("2. " + Integer.toString(l2answer + l2fakeanschg2), 400, 675);
-							g.drawString("3. " + Integer.toString(l2answer), 450, 675);
+							g.drawString("1) " + Integer.toString(l2answer + l2fakeanschg1), 350, 675);
+							g.drawString("2) " + Integer.toString(l2answer + l2fakeanschg2), 400, 675);
+							g.drawString("3) " + Integer.toString(l2answer), 450, 675);
 						}
 						
 					}
@@ -1005,6 +1085,8 @@ import java.awt.font.*;
 						hero1.setyCoord(436);
 						movecount = 1;
 						levelcounter++;
+						l3timer = System.currentTimeMillis()/1000;
+						System.out.println("p: " + l3portal);
 					}
 					
 					g.drawLine(s31.getxCoord()+25, -50, s31.getxCoord()+25, s31.getyCoord()+10);
@@ -1101,6 +1183,10 @@ import java.awt.font.*;
 						
 						if (l3portal == 3) {
 							level = 4;
+							if (System.currentTimeMillis()/1000 - l3timer < 45) {
+								coins = coins + 45 - (System.currentTimeMillis()/1000 - l3timer);
+								System.out.println("coins: " + coins);
+							}
 							System.out.println("level 4");
 						} else {
 							hero1.setxCoord(10);
@@ -1115,6 +1201,10 @@ import java.awt.font.*;
 						
 						if (l3portal == 4) {
 							level = 4;
+							if (System.currentTimeMillis()/1000 - l3timer < 45) {
+								coins = coins + 45 - (System.currentTimeMillis()/1000 - l3timer);
+								System.out.println("coins: " + coins);
+							}
 							System.out.println("level 4");
 						} else {
 							hero1.setxCoord(10);
@@ -1129,6 +1219,10 @@ import java.awt.font.*;
 						
 						if (l3portal == 5) {
 							level = 4;
+							if (System.currentTimeMillis()/1000 - l3timer < 45) {
+								coins = coins + 45 - (System.currentTimeMillis()/1000 - l3timer);
+								System.out.println("coins: " + coins);
+							}
 							System.out.println("level 4");
 						} else {
 							hero1.setxCoord(10);
@@ -1140,11 +1234,11 @@ import java.awt.font.*;
 					
 				} else if (level == 4) {
 					
-					if (levelcounter == 0) {
+					/*if (levelcounter == 0) {
 					System.out.println("Bad portal 4: " + badportal4);
 					System.out.println("p7p8: " + p7p8);
 					levelcounter++;
-					} //TEST
+					} TEST */
 					
 					if (levelcounter == 2) {
 						hero1.setxCoord(0);
@@ -1153,6 +1247,7 @@ import java.awt.font.*;
 						levelcounter++;
 						System.out.println("Bad portal 4: " + badportal4);
 						System.out.println("p7p8: " + p7p8);
+						l4timer = System.currentTimeMillis()/1000;
 					}
 					
 					g.drawImage(helper, 632, 86, 75, 75, this);
@@ -1309,6 +1404,10 @@ import java.awt.font.*;
 					if (portal12.contains(hero1.getxCoord()+100,hero1.getyCoord()+100)) {
 						if (l4qansside == 0) {
 							level = 5;
+							if (System.currentTimeMillis()/1000 - l4timer < 45) {
+								coins = coins + 45 - (System.currentTimeMillis()/1000 - l4timer);
+								System.out.println("coins: " + coins);
+							}
 							telechargetime = 2500;
 							TeleLimit = 2;
 							godmode = false;
@@ -1322,6 +1421,10 @@ import java.awt.font.*;
 					if (portal13.contains(hero1.getxCoord()+100,hero1.getyCoord()+100)) {
 						if (l4qansside == 1) {
 							level = 5;
+							if (System.currentTimeMillis()/1000 - l4timer < 45) {
+								coins = coins + 45 - (System.currentTimeMillis()/1000 - l4timer);
+								System.out.println("coins: " + coins);
+							}
 							telechargetime = 2500;
 							TeleLimit = 2;
 							godmode = false;
@@ -1377,6 +1480,7 @@ import java.awt.font.*;
 						hero1.setyCoord(286);
 						movecount = 2;
 						levelcounter++;
+						l5timer = System.currentTimeMillis()/1000;
 					}
 					
 					g.drawLine(s51.getxCoord()+25, -50, s51.getxCoord()+25, s51.getyCoord()+10);
@@ -1430,6 +1534,27 @@ import java.awt.font.*;
 					if (r51.contains(hero1.getxCoord()+110, hero1.getyCoord()+110)) {
 						
 						health = health - (rand50.nextInt(5) + 5);
+						hero1.setxCoord(hero1.getxCoord() - 150);
+					
+					}
+					Rectangle r52 = new Rectangle(s52.getxCoord(), s52.getyCoord()-33, s52.getWidth(), s52.getHeight()+39);
+					if (r52.contains(hero1.getxCoord()+110, hero1.getyCoord()+110)) {
+						
+						health = health - 5;
+						hero1.setxCoord(hero1.getxCoord() - 150);
+					
+					}
+					Rectangle r53 = new Rectangle(s53.getxCoord(), s53.getyCoord()-33, s53.getWidth(), s53.getHeight()+39);
+					if (r53.contains(hero1.getxCoord()+110, hero1.getyCoord()+110)) {
+						
+						health = health - 5;
+						hero1.setxCoord(hero1.getxCoord() - 150);
+					
+					}
+					Rectangle r54 = new Rectangle(s54.getxCoord(), s54.getyCoord()-33, s54.getWidth(), s54.getHeight()+39);
+					if (r54.contains(hero1.getxCoord()+110, hero1.getyCoord()+110)) {
+						
+						health = health - 5;
 						hero1.setxCoord(hero1.getxCoord() - 150);
 					
 					}
@@ -1489,6 +1614,10 @@ import java.awt.font.*;
 						telechargetime = 2500;
 						TeleLimit = 2;
 						godmode = false;
+						if (System.currentTimeMillis()/1000 - l1timer < 53) {
+							coins = coins + 53 - (System.currentTimeMillis()/1000 - l1timer);
+							System.out.println("coins: " + coins);
+						}
 					}
 				
 				} else if (level == 6) {
@@ -1918,17 +2047,17 @@ import java.awt.font.*;
 						fqtimer = System.currentTimeMillis()/1000;
 						g.drawString(Integer.toString(fq1) + " " + fqopstr + " " + Integer.toString(fq2) + " = ?", 500, 550);
 						if (fqansside == 0) {
-							g.drawString("1. " + Integer.toString(fqanswer), 475, 570);
-							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg1), 530, 570);
-							g.drawString("3. " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
+							g.drawString("1) " + Integer.toString(fqanswer), 475, 570);
+							g.drawString("2) " + Integer.toString(fqanswer + fqfakeanschg1), 530, 570);
+							g.drawString("3) " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
 						} else if (fqansside == 1) {
-							g.drawString("1. " + Integer.toString(fqanswer + fqfakeanschg1), 475, 570);
-							g.drawString("2. " + Integer.toString(fqanswer), 530, 570);
-							g.drawString("3. " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
+							g.drawString("1) " + Integer.toString(fqanswer + fqfakeanschg1), 475, 570);
+							g.drawString("2) " + Integer.toString(fqanswer), 530, 570);
+							g.drawString("3) " + Integer.toString(fqanswer + fqfakeanschg2), 585, 570);
 						} else {
-							g.drawString("1. " + Integer.toString(fqanswer  + fqfakeanschg1), 475, 570);
-							g.drawString("2. " + Integer.toString(fqanswer + fqfakeanschg2), 530, 570);
-							g.drawString("3. " + Integer.toString(fqanswer), 585, 570);
+							g.drawString("1) " + Integer.toString(fqanswer  + fqfakeanschg1), 475, 570);
+							g.drawString("2) " + Integer.toString(fqanswer + fqfakeanschg2), 530, 570);
+							g.drawString("3) " + Integer.toString(fqanswer), 585, 570);
 						}
 						g.drawString("Answer quickly, time affects your score.", 500, 600);
 						
@@ -1937,7 +2066,19 @@ import java.awt.font.*;
 					if (slowWin) {
 						
 						long TimeTaken = System.currentTimeMillis()/1000 - ktimer;
-						long scorenew = ((300 - TimeTaken) / 2) + (powercount * 20) + health + 33;
+						long scorenew = ((300 - TimeTaken) / 2) + (powercount * 20) + health + 33  + ((coins - (coins % 2)) / 2);
+						if (pu1on || pu2on || pu3on || pu4on || pu5on) {
+							scorenew = scorenew - 15;
+						}
+						if (pu3on) {
+							scorenew = scorenew - 15;
+						}
+						if (pu4on) {
+							scorenew = scorenew - 50;
+						}
+						if (health == 100) {
+							scorenew = scorenew + 10;
+						}
 						g.drawImage(background, 0, 0, 1200, 800, this);
 						g.drawString("C O N G R A T U L A T I O N S", 550, 200);
 						g.drawString("YOU WIN!!!", 575, 225);
@@ -1955,7 +2096,19 @@ import java.awt.font.*;
 					if (regWin) {
 						
 						long TimeTaken = System.currentTimeMillis()/1000 - ktimer;
-						long scorenew = ((300 - TimeTaken) / 2) + (powercount * 20) + health + 100;
+						long scorenew = ((300 - TimeTaken) / 2) + (powercount * 20) + health + 100 + ((coins - (coins % 2)) / 2);
+						if (pu1on || pu2on || pu3on || pu4on || pu5on) {
+							scorenew = scorenew - 15;
+						}
+						if (pu3on) {
+							scorenew = scorenew - 15;
+						}
+						if (pu4on) {
+							scorenew = scorenew - 50;
+						}
+						if (health == 100) {
+							scorenew = scorenew + 10;
+						}
 						g.drawImage(background, 0, 0, 1200, 800, this);
 						g.drawString("C O N G R A T U L A T I O N S", 550, 200);
 						g.drawString("YOU WIN!!!", 575, 225);
@@ -2107,13 +2260,128 @@ import java.awt.font.*;
 				stop = true;
 				System.out.println("Sorry! You Lose!");
 				
-			} else {}}
+			} else {}}}
 			
 		}
 		
 		@Override
 		public void keyPressed(KeyEvent e) {
 			//System.out.println(e);
+			
+			if (health > 100) {
+				health = 100;
+			}
+			
+			if (shop) {
+			
+				if (e.getKeyCode() == 57) {
+					shop = false;
+				} else if (e.getKeyCode() == 54) {
+					if (skin1) {
+						purchased = true;
+					} else if (coins >= 30) {
+						skin1 = true;
+						coins = coins - 30;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 55) {
+					if (skin2) {
+						purchased = true;
+					} else if (coins >= 50) {
+						skin2 = true;
+						coins = coins - 50;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 49) {
+					if (pu1on) {
+						purchased = true;
+					} else if (coins >= 10) {
+						pu1on = true;
+						coins = coins - 10;
+						telechargetime = 1250;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 50) {
+					if (pu2on) {
+						purchased = true;
+					} else if (coins >= 20) {
+						pu2on = true;
+						coins = coins - 20;
+						TeleLimit++;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 51) {
+					if (pu3on) {
+						purchased = true;
+					} else if (coins >= 10) {
+						pu3on = true;
+						coins = coins - 10;
+						powercount++;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 52) {
+					if (pu4on) {
+						purchased = true;
+					} else if (coins >= 25) {
+						pu4on = true;
+						coins = coins - 25;
+						powercount = powercount + 3;
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} else if (e.getKeyCode() == 56) {
+					if (bossskin) {
+						purchased = true;
+					} else if (coins >= 75) {
+						bossskin = true;
+						coins = coins - 75;
+						boss.setImg("files/boss copy.png");
+						success = true;
+					} else {
+						needcoins = true;
+					}
+				} 
+				
+			} else {	
+			
+			if (pause) {
+				
+				if (e.getKeyCode() == 49) {
+					
+					pause = false;
+					
+				} else if (e.getKeyCode() == 52) {
+					
+					System.exit(1);
+					
+				} else if (e.getKeyCode() == 51) {
+					
+					instructions = true;
+					
+				} else if (e.getKeyCode() == 50) {
+					
+					shop = true;
+					
+				}
+				
+			} else {
+			
+			if (gamemode.equals("1 player") && e.getKeyCode() == 80) {
+				
+				pause = true;
+				
+			}
 			
 			if (deviceactivated) {
 				
@@ -2191,7 +2459,7 @@ import java.awt.font.*;
 				
 				}
 				
-			}
+			} else {
 			
 			if (l2q) {
 				
@@ -2802,6 +3070,22 @@ import java.awt.font.*;
 					
 				}*/ 
 				
+				if (gamemode.equals("1 player")) {
+					if (e.getKeyCode() == 37) {
+						if (skin2) {
+							hero1.setImg("files/leftcopy2.png");
+						} else if (skin1) {
+							hero1.setImg("files/leftcopy.png");
+						}
+					} else if (e.getKeyCode() == 39) {
+						if (skin2) {
+							hero1.setImg("files/rightcopy2.png");
+						} else if (skin1) {
+							hero1.setImg("files/rightcopy.png");
+						}
+					}
+				}
+				
 				if (e.getKeyCode() == 10 && gamemode.equals("2 player") && puq == false && menu == false) {
 					
 					System.out.println("player 2 attack");
@@ -2824,7 +3108,10 @@ import java.awt.font.*;
 			repaint();
 			
 		}
-		
+		}
+		}
+		}
+			
 		@Override
 		public void keyTyped(KeyEvent e) {
 			//System.out.println(e);
